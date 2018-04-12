@@ -5,7 +5,7 @@ import { InitService } from '../../modules/core/providers/init/init.service';
 import { MatDialog } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute } from '@angular/router';
 import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { UsersService } from '../../modules/core/providers/users/users.service';
 import { Task } from '../../modules/core/models/task/task.model';
@@ -39,8 +39,10 @@ export class TodoEditComponent implements OnInit {
   public currentDate: Date;
   public editedTask: Task;
   public info: {[k: string]: string};
+  public title = '';
 
-  constructor(cdr: ChangeDetectorRef, dialog: MatDialog, errorHandler: ErrorHandler, initService: InitService, route: ActivatedRoute, router: Router, tasksService: TasksService, usersService: UsersService) {
+  constructor(cdr: ChangeDetectorRef, dialog: MatDialog, errorHandler: ErrorHandler, initService: InitService, route: ActivatedRoute,
+              router: Router, tasksService: TasksService, usersService: UsersService) {
 
     this.cdr = cdr;
     this.dialog = dialog;
@@ -62,12 +64,11 @@ export class TodoEditComponent implements OnInit {
       message: null,
       type: MESSAGE_TYPE_INFO
     };
-  
   }
 
   public ngOnInit(): void {
 
-    let taskId: string = 'new';
+    let taskId = 'new';
 
     this.route.params
       .mergeMap((response) => {
@@ -75,15 +76,14 @@ export class TodoEditComponent implements OnInit {
         return this.usersService.load(null, {fields: 'id,first_name,last_name', sort: 'first_name,last_name'});
       })
       .mergeMap((accountUsers: Array<User>) => {
-
         this.accountUsers = accountUsers;
 
         if (taskId !== 'new') {
-
+          this.title = 'Edit Task';
           return this.tasksService.load(parseInt(taskId, 10));
 
         } else {
-
+          this.title = 'Add Task';
           return Observable.of(Task.fromRaw({
             assigned_user_id: null,
             due_date: null,
@@ -114,7 +114,7 @@ export class TodoEditComponent implements OnInit {
 
   public actionConfirmDeleteTask(): void {
 
-    let dialog = this.dialog.open(
+    const dialog = this.dialog.open(
       GenericDialogComponent,
       {
         width: '400px',
@@ -131,13 +131,13 @@ export class TodoEditComponent implements OnInit {
         if (save) {
           this.deleteTask();
         }
-      })
+      });
 
   }
 
   public actionConfirmSaveTask(): void {
 
-    let dialog = this.dialog.open(
+    const dialog = this.dialog.open(
       GenericDialogComponent,
       {
         width: '400px',
@@ -154,7 +154,7 @@ export class TodoEditComponent implements OnInit {
         if (save) {
           this.saveTask();
         }
-      })
+      });
 
   }
 

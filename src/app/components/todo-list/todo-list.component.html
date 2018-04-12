@@ -1,37 +1,23 @@
-<div
-  id="todo-list-page"
-  fxLayout="column"
-  fxLayoutAlign="start start"
-  fxLayoutGap="30px"
-  class="container">
+<beyond-page>
+  <beyond-page-header title="TODO List">
+    <button
+      *ngIf="!blockers.initializing && tasksEditingAllowed"
+      (click)="actionOpenTaskModal()"
+      mat-button
+      class="beyond-btn">
+        Add Task
+    </button>
+  </beyond-page-header>
 
-    <div
-      fxLayout="row"
-      fxLayout.xs="column"
-      fxLayoutAlign="space-between center"
-      fxLayoutWrap
-      fxLayoutGap="15px">
+  <beyond-message
+    *ngIf="info.message"
+    [type]="info.type" >
+    {{ info.message }}
+  </beyond-message>
 
-        <h3>TODO List</h3>
-
-        <button
-          *ngIf="!blockers.initializing && tasksEditingAllowed"
-          (click)="actionOpenTaskModal()"
-          mat-button
-          color="primary">
-            Add Task
-        </button>
-
-    </div>
-
-    <div
-      *ngIf="info.message"
-      [ngClass]="[info.type]" >
-        {{ info.message }}
-    </div>
-
-    <mat-card
+    <beyond-card
       *ngIf="tasks.length > 0"
+      title="Tasks"
       fxLayout="column"
       fxLayoutGap="20px">
 
@@ -57,9 +43,9 @@
               fxFlex="auto"
               [ngClass]="{'line-through': task.isComplete}">
 
-                <div fxLayout="column">{{ task.description }}</div>
+              <div fxLayout="column"><b>{{ task.description }}</b></div>
                 <div fxLayout="row" fxLayout.xs="column" class="task-details">
-                    <span>Assigned to: {{ task.asignedUsername }}</span>&nbsp;
+                    <span>Assigned to: {{ task.assignedUsername }}</span>&nbsp;
                     <span *ngIf="task.dueDate; else noDueDate" class="due-date">Due date: {{ task.dueDate }}</span>
                     <ng-template #noDueDate>
                         <span>No due date set</span>
@@ -72,13 +58,13 @@
               *ngIf="tasksEditingAllowed"
               (click)="actionOpenTaskModal(task.id)"
               mat-button
-              aria-label="Edit task"
-              color="primary">
+              class="beyond-btn text-btn"
+              aria-label="Edit task">
                 Edit
             </button>
 
         </div>
 
-    </mat-card>
+    </beyond-card>
 
-</div>
+</beyond-page>

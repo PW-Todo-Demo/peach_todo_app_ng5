@@ -19,7 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+        "../node_modules/ng-peach/bundles/beyond-index.scss",
         "styles.scss"
       ],
       "scripts": [],

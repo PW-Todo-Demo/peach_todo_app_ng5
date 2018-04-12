@@ -1,34 +1,12 @@
-<div
-  id="todo-edit-page"
-  fxLayout="column"
-  fxLayoutAlign="start start"
-  fxLayoutGap="30px"
-  class="container">
+<beyond-modal [title]="title" [loading]="blockers.initializing" (close)="actionClose()"
+  id="todo-edit-page">
 
-    <div
-      *ngIf="!blockers.initializing && editedTask"
-      fxLayout="row"
-      fxLayoutAlign="space-between center"
-      fxFlex="grow"
-      fxLayoutGap="15px">
-
-        <h3 *ngIf="editedTask.id; else newTaskTitle">Edit Task</h3>
-        <ng-template #newTaskTitle>
-            <h3>Add Task</h3>
-        </ng-template>
-
-    </div>
-
-    <div
-      *ngIf="info.message"
-      [ngClass]="[info.type]" >
-        {{ info.message }}
-    </div>
-
-    <mat-card
-      *ngIf="!blockers.initializing && editedTask"
-      fxLayout="row"
-      fxLayoutGap="20px">
+    <beyond-modal-content *ngIf="!blockers.initializing && editedTask">
+        <beyond-message
+          *ngIf="info.message"
+          [type]="info.type" >
+          {{ info.message }}
+        </beyond-message>
 
         <form
           #taskForm="ngForm"
@@ -38,7 +16,7 @@
           fxFlex.xs="100%"
           fxLayoutGap="10px"
           fxLayoutFill>
-                
+
             <mat-form-field hintLabel="Max 256 characters" fxFlex="100%">
 
                 <textarea
@@ -113,45 +91,42 @@
 
         </form>
 
-    </mat-card>
+    </beyond-modal-content>
 
-    <div
-      *ngIf="!blockers.initializing && editedTask"
-      fxLayout="row"
-      fxLayoutAlign="start"
-      fxLayoutWrap
-      fxLayoutGap="10px">
+    <beyond-modal-footer *ngIf="!blockers.initializing && editedTask"><!--  -->
 
+      <span>
         <button
-          *ngIf="editedTask.id"
+          *ngIf="editedTask && editedTask.id"
           (click)="actionConfirmDeleteTask()"
           [disabled]="blockers.api_processing"
           mat-button
-          mat-raised-button
-          color="warn"
+          class="beyond-btn urgent-btn"
           aria-label="Delete">
-            DELETE
+            Delete
         </button>
+      </span>
 
+      <span>
         <button
           (click)="actionClose()"
           [disabled]="blockers.api_processing"
           mat-button
-          mat-raised-button
+          class="beyond-btn text-btn"
           aria-label="Cancel">
-            CANCEL
+            Cancel
         </button>
 
         <button
           (click)="actionConfirmSaveTask()"
           [disabled]="disableSaveButton()"
           mat-button
-          mat-raised-button
-          color="primary"
+          class="beyond-btn basic-btn"
           aria-label="Save">
-            SAVE
+            Save
         </button>
+      </span>
 
-    </div>
+    </beyond-modal-footer>
 
-</div>
+</beyond-modal>

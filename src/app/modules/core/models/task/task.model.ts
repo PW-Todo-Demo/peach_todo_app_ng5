@@ -32,7 +32,7 @@ export class Task extends BaseModel {
     return this._assigned_user_id;
   }
 
-  public get asignedUsername(): string {
+  public get assignedUsername(): string {
 
     return (this._assigned_user_id instanceof User) ?
       this._assigned_user_id.userName :
@@ -49,7 +49,7 @@ export class Task extends BaseModel {
   }
 
   public get isComplete(): boolean {
-    return this._is_complete
+    return this._is_complete;
   }
 
   public set assignedUserId(userID: number | User) {
