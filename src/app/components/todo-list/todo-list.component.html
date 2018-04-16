@@ -9,6 +9,8 @@
     </button>
   </beyond-page-header>
 
+  <beyond-progressbar [value]="percentComplete"></beyond-progressbar>
+
   <beyond-message
     *ngIf="info.message"
     [type]="info.type" >

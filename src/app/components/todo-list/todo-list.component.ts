@@ -21,13 +21,14 @@ export class TodoListComponent implements OnInit {
   private initService: InitService;
   private router: Router;
   private tasksService: TasksService;
-  
+
   public blockers: {[k: string]: boolean};
   public info: {[k: string]: string};
   public permissions: {[k: string]: boolean} | {};
   public tasksEditingAllowed: boolean;
   public tasks: Array<Task>;
   public userInfo: object;
+  public percentComplete = 0;
 
   constructor(errorHandler: ErrorHandler, initService: InitService, router: Router, tasksService: TasksService) {
 
@@ -62,8 +63,8 @@ export class TodoListComponent implements OnInit {
         this.permissions = _.get(response, 0, {});
         this.userInfo = _.get(response, 1, {});
         this.tasksEditingAllowed = Boolean(this.permissions[APP_PERMISSION_TODO_ADMIN_API_KEY]);
-        
-        let filters: object = !this.permissions[APP_PERMISSION_TODO_ADMIN_API_KEY] ?
+
+        const filters: object = !this.permissions[APP_PERMISSION_TODO_ADMIN_API_KEY] ?
           {assigned_user_id: _.get(this.userInfo, 'id', 0)} :
           null;
 
@@ -76,9 +77,10 @@ export class TodoListComponent implements OnInit {
       })
       .subscribe((tasks: Array<Task>) => {
         this.tasks = tasks;
+        this.updatePercentComplete();
         this.blockers.initializing = false;
         return;
-      })
+      });
 
   }
 
@@ -96,7 +98,7 @@ export class TodoListComponent implements OnInit {
       !this.blockers.initializing &&
       !this.blockers.api_processing
     ) {
-    
+
       task.toggleStatus();
       this.blockers.api_processing = true;
 
@@ -105,13 +107,26 @@ export class TodoListComponent implements OnInit {
           this.handleError(error, true);
           return Observable.empty();
         })
-        .finally(()=> {
+        .finally(() => {
+          this.updatePercentComplete();
           this.blockers.api_processing = false;
         })
         .subscribe();
 
     }
 
+  }
+
+  private updatePercentComplete(): void {
+    if (this.tasks.length) {
+      this.percentComplete = Math.round((this.getTasksCompleteCount() / this.tasks.length) * 100);
+    }
+  }
+
+  private getTasksCompleteCount(): number {
+    let completeCount = 0;
+    _.forEach(this.tasks, (t) => {if (t.isComplete) {completeCount++; }});
+    return completeCount;
   }
 
   private handleError(error: any = null, autoHide: boolean = false): void {

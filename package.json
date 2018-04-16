@@ -28,7 +28,7 @@
     "core-js": "^2.4.1",
     "lodash": "4.17.5",
     "moment-timezone": "0.5.14",
-    "ng-beyond": "git+ssh://git@github.com/peachworks/ng-peach.git#CARD-6234-Angular-5-components-pkg",
+    "ng-beyond": "git+ssh://git@github.com/peachworks/ng-beyond.git#CARD-6234-Angular-5-components-pkg",
     "peach": "^1.0.11",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
