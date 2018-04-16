@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PeachService } from 'ng-peach';
+import { PeachService } from 'ng-beyond';
 
 const API_KEY = 'task_schedules';
 

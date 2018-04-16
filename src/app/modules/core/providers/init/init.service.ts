@@ -2,7 +2,7 @@ import { AccountPrefsService } from '../account-prefs/account-prefs.service';
 import { ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE, APP_ID, APP_PERMISSIONS, OVERDUE_TASKS_TASK_ID, OVERDUE_TASKS_TASK_SCHEDULE } from '../../../../app.const';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { PeachService } from 'ng-peach';
+import { PeachService } from 'ng-beyond';
 import { TaskSchedulesService } from '../task-schedules/task-schedules.service';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/mergeMap';

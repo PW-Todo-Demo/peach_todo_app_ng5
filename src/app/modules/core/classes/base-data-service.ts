@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PeachService } from 'ng-peach';
+import { PeachService } from 'ng-beyond';
 import { Task } from '../models/task/task.model';
 import { User } from '../models/user/user.model';
 import * as _ from 'lodash';

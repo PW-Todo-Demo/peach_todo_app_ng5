@@ -1,6 +1,6 @@
 import { BaseDataService } from '../../classes/base-data-service';
 import { Injectable } from '@angular/core';
-import { PeachService } from 'ng-peach';
+import { PeachService } from 'ng-beyond';
 import { User } from '../../models/user/user.model';
 
 @Injectable()

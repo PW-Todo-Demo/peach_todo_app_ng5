@@ -19,7 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "../node_modules/ng-peach/bundles/beyond-index.scss",
+        "../node_modules/ng-beyond/bundles/beyond-index.scss",
         "styles.scss"
       ],
       "scripts": [],
