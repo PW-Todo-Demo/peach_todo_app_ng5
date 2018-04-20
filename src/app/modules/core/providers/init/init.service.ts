@@ -2,7 +2,7 @@ import { AccountPrefsService } from '../account-prefs/account-prefs.service';
 import { ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE, APP_ID, APP_PERMISSIONS, OVERDUE_TASKS_TASK_ID, OVERDUE_TASKS_TASK_SCHEDULE } from '../../../../app.const';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { PeachService } from 'ng-beyond';
+import { BeyondService } from 'ng-beyond';
 import { TaskSchedulesService } from '../task-schedules/task-schedules.service';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/mergeMap';
@@ -11,7 +11,7 @@ import 'rxjs/add/operator/mergeMap';
 export class InitService {
 
   private accountPrefsService: AccountPrefsService;
-  private peachService: PeachService;
+  private beyondService: BeyondService;
   private taskSchedulesService: TaskSchedulesService;
 
   private accountInfo: object;
@@ -19,12 +19,12 @@ export class InitService {
   private permissions: object;
   private userInfo: object;
 
-  constructor(accountPrefsService: AccountPrefsService, peachService: PeachService, taskSchedulesService: TaskSchedulesService) {
+  constructor(accountPrefsService: AccountPrefsService, beyondService: BeyondService, taskSchedulesService: TaskSchedulesService) {
 
     this.accountPrefsService = accountPrefsService;
-    this.peachService = peachService;
+    this.beyondService = beyondService;
     this.taskSchedulesService = taskSchedulesService;
-    this.peachService.afterPeachAppReady(); // important to call this on app bootstrap
+    this.beyondService.afterBeyondAppReady(); // important to call this on app bootstrap
 
     this.accountInfo = {};
     this.permissions = _.zipObject(
@@ -45,8 +45,8 @@ export class InitService {
   private activate(): Observable<boolean> {
 
     let initialData: Array<any> = [
-      this.peachService.account.getInfo(),
-      this.peachService.user.getInfo()
+      this.beyondService.account.getInfo(),
+      this.beyondService.user.getInfo()
     ];
     let userIsAdmin: boolean = false;
     let permissionsPromisesMap: Array<string> = [];
@@ -63,7 +63,7 @@ export class InitService {
           this.permissions,
           (permission: boolean, key: string) => {
             permissionsPromisesMap.push(key);
-            return this.peachService.app.hasPermission(key);
+            return this.beyondService.app.hasPermission(key);
           }
         );
 
@@ -82,7 +82,7 @@ export class InitService {
         );
 
         if (userIsAdmin) {
-          return this.peachService.account.getPrefs(ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE);
+          return this.beyondService.account.getPrefs(ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE);
         }
 
         return Observable.of(false);

@@ -7,6 +7,7 @@
       class="beyond-btn">
         Add Task
     </button>
+    <beyond-search #search></beyond-search>
   </beyond-page-header>
 
   <beyond-location-alert></beyond-location-alert>
@@ -30,7 +31,7 @@
           fxLayoutAlign="space-between center"
           fxLayoutGap="10px"
           fxLayoutFill
-          *ngFor="let task of tasks">
+          *ngFor="let task of visibleTasks">
 
             <mat-checkbox
               [checked]="task.isComplete"

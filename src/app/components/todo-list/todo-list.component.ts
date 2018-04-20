@@ -1,14 +1,17 @@
 import { APP_PERMISSION_TODO_ADMIN_API_KEY, DEFAULT_INFO_TIMEOUT, MESSAGE_TYPE_ERROR, MESSAGE_TYPE_INFO } from '../../app.const';
-import { Component, ErrorHandler, OnInit } from '@angular/core';
+import {Component, ErrorHandler, OnInit, ViewChild} from '@angular/core';
 import { InitService } from '../../modules/core/providers/init/init.service';
-import { Observable } from 'rxjs';
-import { Router } from "@angular/router";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/empty';
+import { Router } from '@angular/router';
 import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { Task } from '../../modules/core/models/task/task.model';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/mergeMap';
+import {SearchComponent} from 'ng-beyond';
 
 @Component({
   selector: 'app-todo-list',
@@ -27,8 +30,10 @@ export class TodoListComponent implements OnInit {
   public permissions: {[k: string]: boolean} | {};
   public tasksEditingAllowed: boolean;
   public tasks: Array<Task>;
+  public visibleTasks: Array<Task>;
   public userInfo: object;
   public percentComplete = 0;
+  @ViewChild('search') search: SearchComponent;
 
   constructor(errorHandler: ErrorHandler, initService: InitService, router: Router, tasksService: TasksService) {
 
@@ -72,16 +77,18 @@ export class TodoListComponent implements OnInit {
 
       })
       .catch((error: any) => {
-        this.handleError(error);
+        //this.handleError(error);
+        console.log('List Error', JSON.stringify(error));
         return Observable.empty();
       })
       .subscribe((tasks: Array<Task>) => {
         this.tasks = tasks;
+        this.updateVisibleTasks('');
         this.updatePercentComplete();
         this.blockers.initializing = false;
         return;
       });
-
+    this.search.getQueryObservable().debounceTime(500).subscribe(t => this.updateVisibleTasks(t));
   }
 
   public actionOpenTaskModal(taskId: string | number = 'new'): void {
@@ -127,6 +134,14 @@ export class TodoListComponent implements OnInit {
     let completeCount = 0;
     _.forEach(this.tasks, (t) => {if (t.isComplete) {completeCount++; }});
     return completeCount;
+  }
+
+  private updateVisibleTasks(query) {
+    if (query) {
+      this.visibleTasks = _.filter(this.tasks, t => t.description.indexOf(query) !== -1);
+    } else {
+      this.visibleTasks = this.tasks;
+    }
   }
 
   private handleError(error: any = null, autoHide: boolean = false): void {

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PeachService } from 'ng-beyond';
+import { BeyondService } from 'ng-beyond';
 import { Task } from '../models/task/task.model';
 import { User } from '../models/user/user.model';
 import * as _ from 'lodash';
@@ -7,14 +7,14 @@ import * as _ from 'lodash';
 export class BaseDataService {
 
   private modelClass: typeof Task | typeof User;
-  private peachService: PeachService;
+  private beyondService: BeyondService;
   private resource: any;
 
-  constructor(peachService: PeachService, modelClass: typeof Task | typeof User ) {
+  constructor(beyondService: BeyondService, modelClass: typeof Task | typeof User ) {
 
     this.modelClass = modelClass;
-    this.peachService = peachService;
-    this.resource = this.peachService.api.resource(this.modelClass.getApiKey());
+    this.beyondService = beyondService;
+    this.resource = this.beyondService.api.resource(this.modelClass.getApiKey());
 
   }
 
