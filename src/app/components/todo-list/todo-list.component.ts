@@ -77,8 +77,7 @@ export class TodoListComponent implements OnInit {
 
       })
       .catch((error: any) => {
-        //this.handleError(error);
-        console.log('List Error', JSON.stringify(error));
+        this.handleError(error);
         return Observable.empty();
       })
       .subscribe((tasks: Array<Task>) => {
@@ -88,7 +87,7 @@ export class TodoListComponent implements OnInit {
         this.blockers.initializing = false;
         return;
       });
-    this.search.getQueryObservable().debounceTime(500).subscribe(t => this.updateVisibleTasks(t));
+    this.search.queryChange.debounceTime(500).subscribe(t => this.updateVisibleTasks(t));
   }
 
   public actionOpenTaskModal(taskId: string | number = 'new'): void {
