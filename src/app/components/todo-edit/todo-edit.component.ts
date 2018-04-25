@@ -1,8 +1,6 @@
-import { DB_DATE_FORMAT, DEFAULT_INFO_TIMEOUT, DEFAULT_LOCATION_ID, MESSAGE_TYPE_ERROR, MESSAGE_TYPE_INFO } from '../../app.const';
+import { DEFAULT_INFO_TIMEOUT, DEFAULT_LOCATION_ID, MESSAGE_TYPE_ERROR, MESSAGE_TYPE_INFO } from '../../app.const';
 import { ChangeDetectorRef, Component, ErrorHandler, OnInit, ViewChild } from '@angular/core';
-import { GenericDialogComponent } from '../generic-dialog/generic-dialog.component';
 import { InitService } from '../../modules/core/providers/init/init.service';
-import { MatDialog } from '@angular/material';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,6 +8,7 @@ import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { UsersService } from '../../modules/core/providers/users/users.service';
 import { Task } from '../../modules/core/models/task/task.model';
 import { User } from '../../modules/core/models/user/user.model';
+import { DialogService } from 'ng-beyond';
 import * as _ from 'lodash';
 import * as moment from 'moment-timezone';
 import 'rxjs/add/operator/catch';
@@ -26,7 +25,7 @@ export class TodoEditComponent implements OnInit {
   @ViewChild('taskForm') taskForm: NgForm;
 
   private cdr: ChangeDetectorRef;
-  private dialog: MatDialog;
+  private dialog: DialogService;
   private errorHandler: ErrorHandler;
   private initService: InitService;
   private route: ActivatedRoute;
@@ -41,8 +40,8 @@ export class TodoEditComponent implements OnInit {
   public info: {[k: string]: string};
   public title = '';
 
-  constructor(cdr: ChangeDetectorRef, dialog: MatDialog, errorHandler: ErrorHandler, initService: InitService, route: ActivatedRoute,
-              router: Router, tasksService: TasksService, usersService: UsersService) {
+  constructor(cdr: ChangeDetectorRef, dialog: DialogService, errorHandler: ErrorHandler, initService: InitService,
+              route: ActivatedRoute, router: Router, tasksService: TasksService, usersService: UsersService) {
 
     this.cdr = cdr;
     this.dialog = dialog;
@@ -114,15 +113,11 @@ export class TodoEditComponent implements OnInit {
 
   public actionConfirmDeleteTask(): void {
 
-    const dialog = this.dialog.open(
-      GenericDialogComponent,
+    const dialog = this.dialog.openWithData(
       {
-        width: '400px',
-        data: {
-          button_label: 'Delete',
-          title: 'Confirm delete',
-          text: `Are you sure you want to delete this task?`
-        }
+        title: 'Confirm delete',
+        text: `Are you sure you want to delete this task?`,
+        ok_label: 'Confirm delete'
       }
     );
 
@@ -137,15 +132,11 @@ export class TodoEditComponent implements OnInit {
 
   public actionConfirmSaveTask(): void {
 
-    const dialog = this.dialog.open(
-      GenericDialogComponent,
+    const dialog =  this.dialog.openWithData(
       {
-        width: '400px',
-        data: {
-          button_label: 'Save',
-          title: 'Confirm save',
-          text: `Are you sure you want to ${ this.editedTask.id ? 'update this' : 'create a new' } task?`
-        }
+        title: 'Confirm save',
+        text: `Are you sure you want to ${ this.editedTask.id ? 'update this' : 'create a new' } task?`,
+        ok_label: 'Save'
       }
     );
 
