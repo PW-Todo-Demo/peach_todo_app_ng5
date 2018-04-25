@@ -25,7 +25,7 @@ export class TodoListComponent implements OnInit {
   private router: Router;
   private tasksService: TasksService;
 
-  public blockers: {[k: string]: boolean};
+  public blockers: {[k: string]: boolean|number};
   public info: {[k: string]: string};
   public permissions: {[k: string]: boolean} | {};
   public tasksEditingAllowed: boolean;
@@ -44,7 +44,8 @@ export class TodoListComponent implements OnInit {
 
     this.blockers = {
       api_processing: false,
-      initializing: true
+      initializing: true,
+      task: false
     };
     this.info = {
       message: null,
@@ -102,11 +103,11 @@ export class TodoListComponent implements OnInit {
 
     if (
       !this.blockers.initializing &&
-      !this.blockers.api_processing
+      this.blockers.task !== task.id
     ) {
 
       task.toggleStatus();
-      this.blockers.api_processing = true;
+      this.blockers.task = task.id;
 
       this.tasksService.save(task)
         .catch((error) => {
@@ -115,7 +116,7 @@ export class TodoListComponent implements OnInit {
         })
         .finally(() => {
           this.updatePercentComplete();
-          this.blockers.api_processing = false;
+          this.blockers.task = false;
         })
         .subscribe();
 

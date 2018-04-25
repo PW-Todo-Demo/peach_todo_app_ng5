@@ -35,7 +35,7 @@
 
             <mat-checkbox
               [checked]="task.isComplete"
-              [disabled]="blockers.api_processing"
+              [disabled]="blockers.task === task.id"
               (change)="onTaskStatusChange(task)"
               [disableRipple]="true"
               [aria-label]="task.description">
