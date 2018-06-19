@@ -2,7 +2,8 @@ import { DEFAULT_INFO_TIMEOUT, DEFAULT_LOCATION_ID, MESSAGE_TYPE_ERROR, MESSAGE_
 import { ChangeDetectorRef, Component, ErrorHandler, OnInit, ViewChild } from '@angular/core';
 import { InitService } from '../../modules/core/providers/init/init.service';
 import { NgForm } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
+import { empty } from 'rxjs/observable/empty';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { UsersService } from '../../modules/core/providers/users/users.service';
@@ -83,7 +84,7 @@ export class TodoEditComponent implements OnInit {
 
         } else {
           this.title = 'Add Task';
-          return Observable.of(Task.fromRaw({
+          return of(Task.fromRaw({
             assigned_user_id: null,
             due_date: null,
             description: '',
@@ -96,7 +97,7 @@ export class TodoEditComponent implements OnInit {
       })
       .catch((error: any) => {
         this.handleError(error);
-        return Observable.empty();
+        return empty();
       })
       .subscribe((task: Task) => {
         this.editedTask = task;
@@ -165,7 +166,7 @@ export class TodoEditComponent implements OnInit {
     this.tasksService.delete(this.editedTask)
       .catch((error: any) => {
         this.handleError(error);
-        return Observable.empty();
+        return empty();
       })
       .finally(() => {
         this.blockers.api_processing = false;
@@ -214,7 +215,7 @@ export class TodoEditComponent implements OnInit {
     this.tasksService.save(this.editedTask)
       .catch((error: any) => {
         this.handleError(error);
-        return Observable.empty();
+        return empty();
       })
       .finally(() => {
         this.blockers.api_processing = false;

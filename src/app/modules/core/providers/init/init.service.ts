@@ -1,11 +1,14 @@
 import { AccountPrefsService } from '../account-prefs/account-prefs.service';
 import { ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE, APP_ID, APP_PERMISSIONS, OVERDUE_TASKS_TASK_ID, OVERDUE_TASKS_TASK_SCHEDULE } from '../../../../app.const';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Injectable } from '@angular/core';
 import { BeyondService } from 'ng-beyond';
 import { TaskSchedulesService } from '../task-schedules/task-schedules.service';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/mergeMap';
+import { shareReplay } from 'rxjs/internal/operators';
 
 @Injectable()
 export class InitService {
@@ -44,15 +47,15 @@ export class InitService {
 
   private activate(): Observable<boolean> {
 
-    let initialData: Array<any> = [
+    const initialData: Array<any> = [
       this.beyondService.account.getInfo(),
       this.beyondService.user.getInfo()
     ];
     let userIsAdmin: boolean = false;
-    let permissionsPromisesMap: Array<string> = [];
+    const permissionsPromisesMap: Array<string> = [];
     let permissionsData: Array<any> = [];
 
-    return Observable.forkJoin(initialData)
+    return forkJoin(initialData)
       .mergeMap((response: any) => {
 
         this.accountInfo = _.get(response, 0, {});
@@ -85,7 +88,7 @@ export class InitService {
           return this.beyondService.account.getPrefs(ACCT_PREF_KEY_FOR_OVERDUE_TASKS_TASK_SCHEDULE);
         }
 
-        return Observable.of(false);
+        return of(false);
 
       })
       .mergeMap((response: any) => {
@@ -102,7 +105,7 @@ export class InitService {
                 return this.taskSchedulesService.save(OVERDUE_TASKS_TASK_SCHEDULE);
               }
 
-              return Observable.of(true);
+              return of(true);
 
             })
             .mergeMap(() => {
@@ -117,12 +120,11 @@ export class InitService {
 
         } else {
 
-          return Observable.of(true);
+          return of(true);
 
         }
 
-      })
-      .shareReplay();
+      }).pipe(shareReplay());
 
   }
 
@@ -130,7 +132,7 @@ export class InitService {
 
     return this.isReady()
       .mergeMap(() => {
-        return Observable.of(_.cloneDeep(this.accountInfo));
+        return of(_.cloneDeep(this.accountInfo));
       });
 
   }
@@ -139,7 +141,7 @@ export class InitService {
 
     return this.isReady()
       .mergeMap(() => {
-        return Observable.of(_.cloneDeep(this.permissions));
+        return of(_.cloneDeep(this.permissions));
       });
 
   }
@@ -148,7 +150,7 @@ export class InitService {
 
     return this.isReady()
       .mergeMap(() => {
-        return Observable.of(_.cloneDeep(this.userInfo));
+        return of(_.cloneDeep(this.userInfo));
       });
 
   }

@@ -1,8 +1,9 @@
 import { APP_PERMISSION_TODO_ADMIN_API_KEY } from '../../../../app.const';
-import { CanActivate } from "@angular/router";
+import { CanActivate } from '@angular/router';
 import { InitService } from '../init/init.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class AdminPermissionRouteGuardService implements CanActivate {
@@ -17,11 +18,11 @@ export class AdminPermissionRouteGuardService implements CanActivate {
 
     return this.initService.getPermissions()
       .catch(() => {
-        return Observable.of(false);
+        return of(false);
       })
       .flatMap((permissions) => {
-        return Observable.of(permissions[APP_PERMISSION_TODO_ADMIN_API_KEY]);
-      })
+        return of(permissions[APP_PERMISSION_TODO_ADMIN_API_KEY]);
+      });
 
   }
 

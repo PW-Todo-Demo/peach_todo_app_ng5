@@ -2,6 +2,7 @@ import { APP_PERMISSION_TODO_ADMIN_API_KEY, DEFAULT_INFO_TIMEOUT, MESSAGE_TYPE_E
 import {Component, ErrorHandler, OnInit, ViewChild} from '@angular/core';
 import { InitService } from '../../modules/core/providers/init/init.service';
 import { Observable } from 'rxjs/Observable';
+import { debounceTime } from 'rxjs/internal/operators';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/empty';
 import { Router } from '@angular/router';
@@ -88,7 +89,7 @@ export class TodoListComponent implements OnInit {
         this.blockers.initializing = false;
         return;
       });
-    this.search.queryChange.debounceTime(500).subscribe(t => this.updateVisibleTasks(t));
+    this.search.queryChange.pipe(debounceTime(500)).subscribe(t => this.updateVisibleTasks(t));
   }
 
   public actionOpenTaskModal(taskId: string | number = 'new'): void {

@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
 import { BeyondService } from 'ng-beyond';
 import { Task } from '../models/task/task.model';
 import { User } from '../models/user/user.model';
@@ -32,7 +33,7 @@ export class BaseDataService {
 
     return this.resource.find(findParams, otherParams)
       .mergeMap((response) => {
-        return Observable.of(this.modelClass.fromRaw(
+        return of(this.modelClass.fromRaw(
           _.has(response, 'id') ?
             response :
             _.get(response, 'results', [])
