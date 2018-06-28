@@ -21,7 +21,7 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/ng-beyond/bundles/beyond-index.scss",
+              "node_modules/@getbeyond/ng-beyond-js/bundles/beyond-index.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -72,7 +72,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": [
-              "node_modules/ng-beyond/bundles/beyond-index.scss",
+              "node_modules/@getbeyond/ng-beyond-js/bundles/beyond-index.scss",
               "src/styles.scss"
             ],
             "assets": [

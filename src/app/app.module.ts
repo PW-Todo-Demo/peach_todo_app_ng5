@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatCardModule } from '@angular/material';
-import { BeyondComponentsModule, DialogComponent } from 'ng-beyond';
+import { BeyondComponentsModule, DialogComponent } from '@getbeyond/ng-beyond-js';
 
 import { AppRoutingModule } from './modules/app-routing/app-routing.module';
 import { CoreModule } from './modules/core/core.module';

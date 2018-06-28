@@ -3,7 +3,7 @@ import { AdminPermissionRouteGuardService } from './providers/admin-permission-r
 import { CommonModule } from '@angular/common';
 import { InitService } from './providers/init/init.service';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
-import { NgBeyondModule } from 'ng-beyond';
+import { NgBeyondModule } from '@getbeyond/ng-beyond-js';
 import { TaskSchedulesService } from './providers/task-schedules/task-schedules.service';
 import { TasksService } from './providers/tasks/tasks.service';
 import { UsersService } from './providers/users/users.service';

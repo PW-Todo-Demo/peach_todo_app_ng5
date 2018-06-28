@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BeyondService } from 'ng-beyond';
+import { BeyondService } from '@getbeyond/ng-beyond-js';
 
 const API_KEY = 'task_schedules';
 

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { Injectable } from '@angular/core';
-import { BeyondService } from 'ng-beyond';
+import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { TaskSchedulesService } from '../task-schedules/task-schedules.service';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/mergeMap';

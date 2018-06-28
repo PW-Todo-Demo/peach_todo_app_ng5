@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/finally';
 import 'rxjs/add/operator/mergeMap';
-import {SearchComponent} from 'ng-beyond';
+import { SearchComponent } from '@getbeyond/ng-beyond-js';
 
 @Component({
   selector: 'app-todo-list',

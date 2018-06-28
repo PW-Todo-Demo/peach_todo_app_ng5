@@ -9,7 +9,7 @@ import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { UsersService } from '../../modules/core/providers/users/users.service';
 import { Task } from '../../modules/core/models/task/task.model';
 import { User } from '../../modules/core/models/user/user.model';
-import { DialogService } from 'ng-beyond';
+import { DialogService } from '@getbeyond/ng-beyond-js';
 import * as _ from 'lodash';
 import * as moment from 'moment-timezone';
 import 'rxjs/add/operator/catch';

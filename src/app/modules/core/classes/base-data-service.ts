@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { of } from 'rxjs/observable/of';
-import { BeyondService } from 'ng-beyond';
+import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { Task } from '../models/task/task.model';
 import { User } from '../models/user/user.model';
 import * as _ from 'lodash';
