@@ -1,6 +1,6 @@
+import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {BeyondService} from '@getbeyond/ng-beyond-js';
 
 const API_KEY = 'account_prefs';
 
@@ -15,7 +15,7 @@ export class AccountPrefsService {
     this.resource = this.beyondService.api.resource(API_KEY, {useCoreToken: true});
   }
 
-  public save(data: any = {}): Observable<any> {
+  save(data: any = {}): Observable<any> {
     return this.resource.save(data);
   }
 

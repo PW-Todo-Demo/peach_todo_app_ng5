@@ -1,9 +1,11 @@
-import { Observable } from 'rxjs';
-import { of } from 'rxjs/observable/of';
+import * as _ from 'lodash';
+import { _throw } from 'rxjs/observable/throw';
 import { BeyondService } from '@getbeyond/ng-beyond-js';
+import { mergeMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+
 import { Task } from '../models/task/task.model';
 import { User } from '../models/user/user.model';
-import * as _ from 'lodash';
 
 export class BaseDataService {
 
@@ -19,7 +21,7 @@ export class BaseDataService {
 
   }
 
-  public delete(findParams: object | number | Task = null): Observable<any> {
+  delete(findParams: object | number | Task = null): Observable<any> {
 
     if (findParams instanceof Task) {
       findParams = findParams.id;
@@ -29,23 +31,25 @@ export class BaseDataService {
 
   }
 
-  public load(findParams: object | number = null, otherParams: object = null): Observable<any> {
+  load(findParams: object | number = null, otherParams: object = null): Observable<any> {
 
     return this.resource.find(findParams, otherParams)
-      .mergeMap((response) => {
-        return of(this.modelClass.fromRaw(
-          _.has(response, 'id') ?
-            response :
-            _.get(response, 'results', [])
-        ));
-      });
+      .pipe(
+        mergeMap((response) => {
+          return of(this.modelClass.fromRaw(
+            _.has(response, 'id') ?
+              response :
+              _.get(response, 'results', [])
+          ));
+        })
+      );
 
   }
 
-  public save(modelInstance: Task = null): Observable<any> {
+  save(modelInstance: Task = null): Observable<any> {
 
     if (!this.modelClass.isValid(modelInstance)) {
-      return Observable.throw({
+      return _throw({
         message: `Could not save - invalid ${this.modelClass.name} object given.`,
         object: modelInstance
       });

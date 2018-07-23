@@ -6,6 +6,7 @@ $font-color-due: #d12020;
 #page_frame{
   overflow-y: auto !important;
 }
+
 .text-center {
   text-align: center;
 }
@@ -13,7 +14,8 @@ $font-color-due: #d12020;
 .container {
   padding: 30px;
 }
-beyond-progressbar{
+
+beyond-progressbar {
   display: flex;
   margin-top: 20px;
 }

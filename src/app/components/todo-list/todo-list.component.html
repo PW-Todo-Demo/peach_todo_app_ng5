@@ -1,26 +1,31 @@
-<beyond-page>
-  <beyond-page-header title="TODO List">
-    <button
-      *ngIf="!blockers.initializing && tasksEditingAllowed"
-      (click)="actionOpenTaskModal()"
-      mat-button
-      class="beyond-btn">
-        Add Task
-    </button>
-    <beyond-search #search></beyond-search>
-  </beyond-page-header>
+<beyond-page id="todo-list-page">
 
-  <beyond-progressbar [value]="percentComplete"></beyond-progressbar>
+    <beyond-page-header title="TODO List">
 
-  <beyond-message
-    *ngIf="info.message"
-    [type]="info.type" >
-    {{ info.message }}
-  </beyond-message>
+        <button
+          *ngIf="!blockers.initializing && tasksEditingAllowed"
+          (click)="actionOpenTaskModal()"
+          mat-button
+          class="beyond-btn">
+            Add Task
+        </button>
+
+        <beyond-search #search></beyond-search>
+
+    </beyond-page-header>
+
+    <beyond-progressbar [value]="percentComplete"></beyond-progressbar>
+
+    <beyond-message
+      *ngIf="info.message"
+      [type]="info.type">
+        {{ info.message }}
+    </beyond-message>
 
     <beyond-card
       *ngIf="tasks.length > 0"
       title="Tasks"
+      fxFlexAlign="start"
       fxLayout="column"
       fxLayoutGap="20px">
 
@@ -42,11 +47,13 @@
             <div
               fxLayout="column"
               fxLayoutAlign="start start"
-              fxLayoutGap="5px"
               fxFlex="auto"
               [ngClass]="{'line-through': task.isComplete}">
 
-              <div fxLayout="column"><b>{{ task.description }}</b></div>
+                <div fxLayout="column">
+                    <b>{{ task.description }}</b>
+                </div>
+
                 <div fxLayout="row" fxLayout.xs="column" class="task-details">
                     <span>Assigned to: {{ task.assignedUsername }}</span>&nbsp;
                     <span *ngIf="task.dueDate; else noDueDate" class="due-date">Due date: {{ task.dueDate }}</span>
@@ -54,8 +61,8 @@
                         <span>No due date set</span>
                     </ng-template>
                 </div>
-            </div>
 
+            </div>
 
             <button
               *ngIf="tasksEditingAllowed"

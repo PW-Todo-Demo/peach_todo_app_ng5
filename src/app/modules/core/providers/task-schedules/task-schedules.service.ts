@@ -1,6 +1,6 @@
+import { BeyondService } from '@getbeyond/ng-beyond-js';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BeyondService } from '@getbeyond/ng-beyond-js';
 
 const API_KEY = 'task_schedules';
 
@@ -15,11 +15,11 @@ export class TaskSchedulesService {
     this.resource = this.beyondService.api.resource(API_KEY);
   }
 
-  public load(findParams: object | number = null, otherParams: object = null): Observable<any> {
+  load(findParams: object | number = null, otherParams: object = null): Observable<any> {
     return this.resource.find(findParams, otherParams);
   }
 
-  public save(data: any = {}): Observable<any> {
+  save(data: any = {}): Observable<any> {
     return this.resource.save(data);
   }
 

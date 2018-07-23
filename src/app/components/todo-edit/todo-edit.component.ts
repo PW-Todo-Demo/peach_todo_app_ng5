@@ -1,20 +1,18 @@
-import { DEFAULT_INFO_TIMEOUT, DEFAULT_LOCATION_ID, MESSAGE_TYPE_ERROR, MESSAGE_TYPE_INFO } from '../../app.const';
+import * as _ from 'lodash';
+import * as moment from 'moment-timezone';
+import { catchError, finalize, mergeMap } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, ErrorHandler, OnInit, ViewChild } from '@angular/core';
-import { InitService } from '../../modules/core/providers/init/init.service';
+import { DialogService } from '@getbeyond/ng-beyond-js';
+import { empty, of } from 'rxjs';
 import { NgForm } from '@angular/forms';
-import { of } from 'rxjs/observable/of';
-import { empty } from 'rxjs/observable/empty';
 import { Router, ActivatedRoute } from '@angular/router';
+
+import { DEFAULT_INFO_TIMEOUT, DEFAULT_LOCATION_ID, MESSAGE_TYPE_ERROR, MESSAGE_TYPE_INFO } from '../../app.const';
+import { InitService } from '../../modules/core/providers/init/init.service';
 import { TasksService } from '../../modules/core/providers/tasks/tasks.service';
 import { UsersService } from '../../modules/core/providers/users/users.service';
 import { Task } from '../../modules/core/models/task/task.model';
 import { User } from '../../modules/core/models/user/user.model';
-import { DialogService } from '@getbeyond/ng-beyond-js';
-import * as _ from 'lodash';
-import * as moment from 'moment-timezone';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/finally';
-import 'rxjs/add/operator/mergeMap';
 
 @Component({
   selector: 'app-todo-edit',
@@ -25,6 +23,13 @@ export class TodoEditComponent implements OnInit {
 
   @ViewChild('taskForm') taskForm: NgForm;
 
+  accountUsers: Array<User>;
+  blockers: {[k: string]: boolean};
+  currentDate: Date;
+  editedTask: Task;
+  info: {[k: string]: string};
+  title = '';
+
   private cdr: ChangeDetectorRef;
   private dialog: DialogService;
   private errorHandler: ErrorHandler;
@@ -34,15 +39,10 @@ export class TodoEditComponent implements OnInit {
   private tasksService: TasksService;
   private usersService: UsersService;
 
-  public accountUsers: Array<User>;
-  public blockers: {[k: string]: boolean};
-  public currentDate: Date;
-  public editedTask: Task;
-  public info: {[k: string]: string};
-  public title = '';
-
-  constructor(cdr: ChangeDetectorRef, dialog: DialogService, errorHandler: ErrorHandler, initService: InitService,
-              route: ActivatedRoute, router: Router, tasksService: TasksService, usersService: UsersService) {
+  constructor(
+    cdr: ChangeDetectorRef, dialog: DialogService, errorHandler: ErrorHandler, initService: InitService,
+      route: ActivatedRoute, router: Router, tasksService: TasksService, usersService: UsersService
+  ) {
 
     this.cdr = cdr;
     this.dialog = dialog;
@@ -66,39 +66,46 @@ export class TodoEditComponent implements OnInit {
     };
   }
 
-  public ngOnInit(): void {
+  ngOnInit(): void {
 
     let taskId = 'new';
 
     this.route.params
-      .mergeMap((response) => {
-        taskId = _.get(response, 'taskId', taskId);
-        return this.usersService.load(null, {fields: 'id,first_name,last_name', sort: 'first_name,last_name'});
-      })
-      .mergeMap((accountUsers: Array<User>) => {
-        this.accountUsers = accountUsers;
+      .pipe(
+        mergeMap((response) => {
+          taskId = _.get(response, 'taskId', taskId);
+          return this.usersService.load(null, {fields: 'id,first_name,last_name', sort: 'first_name,last_name'});
+        }),
+        mergeMap((accountUsers: Array<User>) => {
 
-        if (taskId !== 'new') {
-          this.title = 'Edit Task';
-          return this.tasksService.load(parseInt(taskId, 10));
+          this.accountUsers = accountUsers;
 
-        } else {
-          this.title = 'Add Task';
-          return of(Task.fromRaw({
-            assigned_user_id: null,
-            due_date: null,
-            description: '',
-            is_complete: false,
-            location_id: DEFAULT_LOCATION_ID
-          }));
+          if (taskId !== 'new') {
 
-        }
+            this.title = 'Edit Task';
+            return this.tasksService.load(parseInt(taskId, 10));
 
-      })
-      .catch((error: any) => {
-        this.handleError(error);
-        return empty();
-      })
+          } else {
+
+            this.title = 'Add Task';
+            return of(
+              Task.fromRaw({
+                assigned_user_id: null,
+                due_date: null,
+                description: '',
+                is_complete: false,
+                location_id: DEFAULT_LOCATION_ID
+              })
+            );
+
+          }
+
+        }),
+        catchError((error: any) => {
+          this.handleError(error);
+          return empty();
+        })
+      )
       .subscribe((task: Task) => {
         this.editedTask = task;
         this.blockers.initializing = false;
@@ -108,19 +115,17 @@ export class TodoEditComponent implements OnInit {
 
   }
 
-  public actionClose(): void {
+  actionClose(): void {
     this.router.navigate(['todo']);
   }
 
-  public actionConfirmDeleteTask(): void {
+  actionConfirmDeleteTask(): void {
 
-    const dialog = this.dialog.openWithData(
-      {
-        title: 'Confirm delete',
-        text: `Are you sure you want to delete this task?`,
-        ok_label: 'Confirm delete'
-      }
-    );
+    const dialog = this.dialog.openWithData({
+      title: 'Confirm delete',
+      text: `Are you sure you want to delete this task?`,
+      ok_label: 'Confirm delete'
+    });
 
     dialog.afterClosed()
       .subscribe((save: boolean) => {
@@ -131,15 +136,13 @@ export class TodoEditComponent implements OnInit {
 
   }
 
-  public actionConfirmSaveTask(): void {
+  actionConfirmSaveTask(): void {
 
-    const dialog =  this.dialog.openWithData(
-      {
-        title: 'Confirm save',
-        text: `Are you sure you want to ${ this.editedTask.id ? 'update this' : 'create a new' } task?`,
-        ok_label: 'Save'
-      }
-    );
+    const dialog =  this.dialog.openWithData({
+      title: 'Confirm save',
+      text: `Are you sure you want to ${ this.editedTask.id ? 'update this' : 'create a new' } task?`,
+      ok_label: 'Save'
+    });
 
     dialog.afterClosed()
       .subscribe((save: boolean) => {
@@ -150,7 +153,7 @@ export class TodoEditComponent implements OnInit {
 
   }
 
-  public disableSaveButton(): boolean {
+  disableSaveButton(): boolean {
 
     return this.blockers.api_processing ||
       !Task.isValid(this.editedTask) ||
@@ -164,13 +167,15 @@ export class TodoEditComponent implements OnInit {
     this.blockers.api_processing = true;
 
     this.tasksService.delete(this.editedTask)
-      .catch((error: any) => {
-        this.handleError(error);
-        return empty();
-      })
-      .finally(() => {
-        this.blockers.api_processing = false;
-      })
+      .pipe(
+        catchError((error: any) => {
+          this.handleError(error);
+          return empty();
+        }),
+        finalize(() => {
+          this.blockers.api_processing = false;
+        })
+      )
       .subscribe(() => {
         this.actionClose();
         return;
@@ -213,13 +218,15 @@ export class TodoEditComponent implements OnInit {
     this.blockers.api_processing = true;
 
     this.tasksService.save(this.editedTask)
-      .catch((error: any) => {
-        this.handleError(error);
-        return empty();
-      })
-      .finally(() => {
-        this.blockers.api_processing = false;
-      })
+      .pipe(
+        catchError((error: any) => {
+          this.handleError(error);
+          return empty();
+        }),
+        finalize(() => {
+          this.blockers.api_processing = false;
+        })
+      )
       .subscribe(() => {
         this.actionClose();
         return;

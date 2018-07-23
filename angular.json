@@ -21,7 +21,7 @@
               "src/favicon.ico"
             ],
             "styles": [
-              "node_modules/@getbeyond/ng-beyond-js/bundles/beyond-index.scss",
+              "./node_modules/@getbeyond/ng-beyond-js/bundles/beyond-index.scss",
               "src/styles.scss"
             ],
             "scripts": []
